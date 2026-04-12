@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}settings{% endblock %}
+{% block content %}
+<form action="/settings" method="post">
+    <label for="firmname">Firm Name:</label>
+    <input type="text" name="firm"><br>
+    <label for="gstno">GST No:</label>
+    <input type="text" name="gstno"><br>
+    <label for="firmaddress">Firm Address:</label>
+    <input type="text" name="firmaddress"><br>
+    <button type="submit">save</button>
+</form>
+{% endblock %}
+{% block footer %}{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block navbar %}{% endblock %}
+{% block content %}
+<header>firmname:{{header}}</header>
+<div class="images">
+    <a href="/billing">
+        <img src="/static/billing.jpeg">
+    </a>
+    <a href="/product">
+        <img src="/static/product.jpeg">
+    </a>
+    <a href="/inventory">
+        <img src="/static/inventory.jpeg">
+    </a>
+</div>
+<div id="date">
+    <p>{{date}}</p>
+</div>
+{% endblock %}
+{% block footer %}{% endblock footer %}

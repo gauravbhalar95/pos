@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Page</title>
+    <link rel="stylesheet" href="/static/styles/styles.css">
+</head>
+<body>
+
+    <!-- Barcode Input -->
+    <input type="text" id="scanner" placeholder="Scan barcode" onkeypress="handleScan(event)">
+
+    <!-- Products Grid -->
+    <div class="main">
+        {% for p in products %}
+        <div class="product-box">
+            
+            <!-- FIX: removed duplicate id, use class -->
+            <button class="addcart" onclick="addToCart('{{ p[1] }}','{{ p[2] }}','{{ p[4] }}','{{ p[5] }})">
+                <img class="product-image" src="data:image/jpeg;base64,{{ p[3]|b64encode }}">
+            </button>
+
+            <p>{{ p[1] }}</p>
+            <p>₹ {{ p[2] }}</p>
+            <p>Barcode: {{ p[4] }}</p>
+
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Cart Section -->
+    <div id="cart">
+        <table id="carttable">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Product Name</th>
+                    <th>Barcode</th>
+                    <th>Qty</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- JS will insert rows here -->
+            </tbody>
+        </table>
+
+        <p>Total: ₹ <span id="total">0</span></p>
+        <p>GST: ₹ <span id="gst">0</span></p>
+        <h3>Grand: ₹ <span id="grand">0</span></h3>
+
+        <button class="pay-btn" onclick="checkout()">Pay</button>
+        <button onclick="window.print()" class="print">Print</button>
+        <button type="button">PDF</button>
+    </div>
+
+<script src="/static/js/scripts.js"></script>
+</body>
+</html>

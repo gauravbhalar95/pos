@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>register</title>
+</head>
+<body>
+    <form action="/register" method="post">
+        <h2>register page</h2>
+        <input type="text" name="username" id="user"><br>
+        <input type="password" name="password" id="pass"><br>
+        <input type="password" name="pin" id="pin" minlength="4" maxlength="4">
+        <button type="button" onclick="show()">show</button>
+        <br>
+        <button type="submit">submit</button>
+    </form>
+    <script>
+        function show(){
+            let showpassword = document.getElementById("pass")
+            let number = document.getElementById("pin")
+            if (showpassword.type == "password" || number.type == "password"){
+                showpassword.type = "text";
+                number.type = "pin"
+            }
+            else{
+                showpassword.type = "password";
+                number.type = "password"
+            } 
+        }
+    </script>
+</body>
+</html>

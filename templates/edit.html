@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}edit{% endblock %}
+{% block content %}
+<form action="/edit/{{id}}" method="POST" enctype="multipart/form-data">
+    <input type="text" name="itemname" value="{{ product[1] }}" placeholder="Item Name"><br>
+    <input type="text" name="price" value="{{ product[2] }}" placeholder="Price"><br>
+    <input type="file" name="file"><br>
+    <button type="submit">Update</button>
+</form>
+
+{% endblock %}

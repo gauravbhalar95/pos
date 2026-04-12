@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}inventory{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+<form action="/inventory" method="post" enctype="multipart/form-data">
+    <p>{{ product }}</p><br>
+    Image:
+    <input type="file" name="file"><br>
+    Barcode:
+    <input type="number" name="barcode">
+    Product Name:
+    <input type="text" name="productname"><br>
+    Price:
+    <input type="text" name="price" ><br>
+    Gst:
+    <input type="radio" name="gst" value="gst5">5%
+    <input type="radio" name="gst" value="gst18">18%
+    <input type="radio" name="gst" value="gst28">28%
+    <button type="submit">save</button>
+</form>
+<button type="button" id="import">Import</button>
+{% endblock %}

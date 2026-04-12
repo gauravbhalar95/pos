@@ -1,0 +1,14 @@
+<!<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width-device-width, initial-scale=1.0">
+        <title>Firm Select</title>
+    </head>
+    <body>
+        <select name="firm_id">
+            {% for f in firm %}
+            <option value="{{f.id}}">{{f.firm_name}}</option>
+        </select>
+    </body>
+</html>

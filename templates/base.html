@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}{% endblock %}
+    </title>
+    {% block head %}{% endblock %}
+    <link rel="stylesheet" href="/static/styles/styles.css">
+</head>
+<body>
+{% block body %}
+<header>
+    {% block header %}{% endblock %}
+</header>
+<nav class="container">     
+        <a href="/home">Home</a>
+        <a href="/inventory">Inventory</a>
+        <a href="/ledger">Ledger</a>
+        <a href="/settings">Settings</a>
+    {% block navbar %}{% endblock %}
+</nav>
+<main>
+    {% block content %}{% endblock %}
+</main>
+<footer>
+    {% block footer %}{% endblock footer %}
+</footer>
+{% endblock body %}
+<script src="/static/js/scripts.js"></script>
+</body>
+</html>

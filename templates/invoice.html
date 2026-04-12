@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice</title>
+</head>
+<body onload="window.print()">
+
+<h2>{{header[1]}}</h2>
+<h2>GST NO:{{header[4]}}</h2>
+<h2>ADDRESS:{{header[3]}}</h2>
+<p>Invoice No: {{invoice[0]}}</p>
+<p>Date: {{invoice[1]}}</p>
+
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Item</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Total</th>
+    </tr>
+
+    {% for item in items %}
+    <tr>
+        <td>{{item[1]}}</td>
+        <td>{{item[5]}}</td>
+        <td>{{item[3]}}</td>
+        <td>{{item[4]}}</td>
+        <td>{{item[6]}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Total: {{invoice[4]}}</h3>
+
+</body>
+</html>
