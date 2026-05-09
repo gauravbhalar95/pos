@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="r_div">
+<table class="r_table">
+    <tr>
+        <th>id</th>
+        <th>date</th>
+        <th>qty</th>
+        <th>rate</th>
+        <th>product name</th>
+        <th>₹ gst</th>
+        <th>grand total</th>
+        <th>action</th>
+    </tr>
+
+    {% for f in recipet %}
+    {% for i in item %}
+    <tr>
+        <td>{{ f[0] }}</td>
+        <td>{{ f[1] }}</td>
+        <td>{{ i[3] }}</td>
+        <td>{{ i[4] }}</td>
+        <td>{{ i[5] }}</td>
+        <td>{{ f[3] }}</td>
+        <td>{{ f[4] }}</td>
+        <td>
+            <a href="/delete/{{ f[0] }}">
+                <button class="r_delete">Delete</button>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+</table>
+</div>
+
+<form action="/receipt" method="post">
+    <label for="Download" class="template">Download
+    <input type="submit" name="val" class="template1" value="True">
+    </label>
+</form>
+{% endblock %}
+{% block extra_scripts %}{% endblock %}
+
+

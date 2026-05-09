@@ -10,9 +10,9 @@ from product import *
 inventory_db = Blueprint("inventory", __name__)
 
 
-@inventory_db.route("/inventory/submit", methods=["POST"])
+@inventory_db.route("/import", methods=["POST"])
 def excel():
-    file = request.files["file"]
+    file = request.files["import"]
     df = pd.read_excel(file)
 
     conn = contect()
@@ -38,6 +38,7 @@ def inventory():
         price = request.form.get("price")
         barcode = request.form.get("barcode")
         gst = request.form.get("gst")
+        firm_id = session.get("firm_id")
         if gst == "gst5":
             gst = "5"
         elif gst == "gst18":
@@ -48,8 +49,8 @@ def inventory():
         conn = contect()
         cursor = conn.cursor()
 
-        query = "INSERT INTO inventory(name, price, image, barcode,gst) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(query, (name, price, image, barcode,gst))
+        query = "INSERT INTO inventory(name, price, image, barcode,gst,firm_id) VALUES (%s,%s, %s, %s, %s, %s)"
+        cursor.execute(query, (name, price, image, barcode,gst,firm_id))
 
         conn.commit()
         cursor.close()

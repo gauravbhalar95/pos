@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="add_box">
+    <form class="firm" action="/add_firm" method="post">
+        <h3 class="f_text">BUSINESS NAME</h3>
+        <input class="firm_box" type="text" name="firm" placeholder="e.g Sharma Genaral Store"><br>
+        <h3 class="f_text">GST NUMBER</h3>
+        <input class="firm_box" type="text" name="gstno" placeholder="e.g 99ABCDE9999F1ZN"><br>
+        <h3 class="f_text">BUSINESS</h3>
+        <input class="firm_box" type="text" name="firmaddress" placeholder="e.g 150ft Road Rajkot"><br>
+        <button class="fsmt" type="submit">💾SAVE SETTINGS</button>
+    </form>
+    <a class="fline" href="/firm">SKIP A MADE THE FIRM</a>
+</div>
+{% endblock %}
+{% block extra_scripts %}{% endblock %}
+

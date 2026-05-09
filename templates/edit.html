@@ -1,11 +1,41 @@
 {% extends "base.html" %}
-{% block title %}edit{% endblock %}
 {% block content %}
-<form action="/edit/{{id}}" method="POST" enctype="multipart/form-data">
-    <input type="text" name="itemname" value="{{ product[1] }}" placeholder="Item Name"><br>
-    <input type="text" name="price" value="{{ product[2] }}" placeholder="Price"><br>
-    <input type="file" name="file"><br>
-    <button type="submit">Update</button>
-</form>
+<div class="edit_box">
+    <form action="{{ url_for('product.edit', id=product[0]) }}" method="post" enctype="multipart/form-data">
+        <h3 class="text">PRODUCT NAME</h3>
+        <input class="edit_boxes" type="text" name="productname" value="{{ product[1] }}"><br>
+        <h3 class="text">BARCODE</h3>
+        <input class="edit_boxes" type="number" name="barcode" value="{{ product[4] }}"><br>
+        <h3 class="text">PRICE</h3>
+        <input class="edit_boxes" type="text" name="price" value="{{ product[2] }}" ><br>
+        <div class="gst-container">
+        <input type="radio" id="gst5" name="gst" value="5">
+        <label for="gst5">GST 5%</label>
 
+        <input type="radio" id="gst18" name="gst" value="18">
+        <label for="gst18">GST 18%</label>
+
+        <input type="radio" id="gst28" name="gst" value="28">
+        <label for="gst28">GST 28%</label>
+        </div>
+        <h3 class="text">Image:</h3>
+        
+        <div class="edit_image_div">
+            <label for="fileInput" class="edit_label">
+            📷 CLICK TO UPLOAD IMAGE
+            </label>
+            <input type="file" id="fileInput" name="file" hidden>
+        </div>
+        <button class="edit_smt" type="submit">🗃️SAVE </button>
+    </form>
+</div>
 {% endblock %}
+{% block extra_scripts %}{% endblock %}
+
+
+
+
+
+
+
+

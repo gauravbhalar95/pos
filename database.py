@@ -2,7 +2,7 @@ import mysql.connector as myconn
 
 
 def contect():
-    conn = myconn.connect(host="127.0.0.1",user="root",password="1234",database="website")
+    conn = myconn.connect(host="localhost",user="root",password="GAURAV",database="website")
     return conn
 
 
@@ -25,7 +25,10 @@ def setup_database():
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(255),
         password VARCHAR(255),
-        pin INT
+        pin INT,
+        father VARCHAR(255),
+        mother VARCHAR(255),
+        teacher VARCHAR(255)
     )
     """)
 
@@ -37,7 +40,8 @@ def setup_database():
         price INT,
         image LONGBLOB,
         barcode BIGINT,
-        gst INT
+        gst INT,
+        firm_id VARCHAR(255)
     )
     """)
 
@@ -49,7 +53,8 @@ def setup_database():
         total_amount DECIMAL(10, 2) DEFAULT NULL,
         gst VARCHAR(255) DEFAULT NULL,
         grand_total INT DEFAULT NULL,
-        PRIMARY KEY (id)
+        PRIMARY KEY (id),
+        firm_id VARCHAR(255)
     )
     """)
 
@@ -65,8 +70,8 @@ def setup_database():
         total INT,
         PRIMARY KEY (id),
         FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE CASCADE,
-        FOREIGN KEY (product_id) REFERENCES inventory(id) ON DELETE CASCADE
-    )
+        FOREIGN KEY (product_id) REFERENCES inventory(id) ON DELETE CASCADE,
+        firm_id VARCHAR(255))
     """)
 
     # Step 8: Commit changes

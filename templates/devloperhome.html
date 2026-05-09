@@ -1,0 +1,39 @@
+{% extends "devbase.html" %}
+{% block content %}
+    <aside class="h_side" id="sld">
+        <div>
+            <h5>PROFILE</h5>
+            <img class="icon" src="{{ url_for('static', filename='icons/user.png') }}" alt="PROFILE">
+        </div>
+        <div>
+            <a href="rate">
+                <h5>subscription rate</h5>
+                <img class="icon" src="{{ url_for('static', filename='icons/financial-analysis.png') }}" alt="financial-analysis">
+            </a>
+        </div>
+    </aside>
+<div class="main_box">
+    <div class="a_box">
+        <a href="/a_user">
+            <h5>Total user</h5>
+            <h5>{{ user[0] }}</h5>
+        </a>
+    </div>
+    <div class="a_box">
+        <a href="/a_sub">
+            <h5>Total subscriber active</h5>
+            <h5>{{ user[1] }}</h5>
+        </a>
+    </div>
+    <div class="a_box">
+        <a href="/a_ern">
+            <h5>Total ern</h5>
+            <h5>{{ user[2] }}</h5>
+        </a>
+    </div>
+</div>
+<div class="bar">
+    <img src="{{ url_for('static', filename='bar.png') }}" alt="Bar Chart">
+</div>
+{% endblock %}
+{% block extra_scripts %}{% endblock %}

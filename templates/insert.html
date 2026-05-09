@@ -1,0 +1,16 @@
+{% extends "devbase.html" %}
+{% block title %}insert{% endblock %}
+{% block content %}
+<div class="in_form">
+    <form action="/sub/insert" method="post">
+        <label for="">PLAN_NAME</label>
+        <input type="text" name="plan" class="sub_insert" placeholder="plan-name"><br>
+        <label for="">DAYS</label>
+        <input type="text" name="days" class="sub_insert" placeholder="days"><br>
+        <label for="">PRICE</label>
+        <input type="text" name="price" class="sub_insert" placeholder="price"><br>
+        <button class="i_btn" type="submit">🗃️SAVE</button>
+    </form>
+</div>
+{% endblock %}
+{% block extra_scripts %}{% endblock %}

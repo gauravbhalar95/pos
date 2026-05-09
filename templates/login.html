@@ -4,31 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
-    <link rel="stylesheet" href="/static/styles/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile.css') }}">
 </head>
 <body>
-    <form action="/login" method="post">
-        <h2>login page</h2>
-        <input type="text" name="username" id="user"><br>
-        <input type="password" name="password" id="pass"><br>
-        <input type="password" name="pin" id="pin" minlength="4" maxlength="4">
-        <button type="button" onclick="show()">show</button>
-        <br>
-        <button type="submit">submit</button>
-    </form>
-    <script>
-        function show(){
-            let showpassword = document.getElementById("pass")
-            let number = document.getElementById("pin")
-            if (showpassword.type == "password" || number.type == "password"){
-                showpassword.type = "text";
-                number.type = "pin"
-            }
-            else{
-                showpassword.type = "password";
-                number.type = "password"
-            } 
-        }
-    </script>
+    <form class="login" action="/login" method="post">
+        <div class="taj">👑</div>
+        <h2 class="king">KING POS</h2>
+        <div class="log_box">
+            <h3>USERNAME</h3>
+            <input class="login_box" type="text" name="username" id="user" placeholder="username"><br>
+            <h3>PASSWORD</h3>  
+            <input class="login_box" type="password" name="password" id="pass" placeholder="password"><br>
+            <h3>PIN (4 digit)</h3>  
+            <input class="login_box" type="password" name="pin" id="pin" minlength="4" maxlength="4" placeholder="4 digit pin"><br>
+            <input class="check" id="tr" type="checkbox" name="true" value="true">Remember me
+            <a href="/forgetpassword">Forget Password</a><br>
+            <button class="login_btn" type="button" onclick="show()">👁️SHOW / HIDE</button>
+            <br>
+            <button class="lsmt" type="submit">ENTER THE KINGDOM</button>
+        </div>
+    </form>  
+    <h4>
+  New here 
+  <a class="link" href="/register" style="margin-left:4px;">Create an account</a>
+</h4>
+    <script src="{{ url_for('static', filename='/js/scripts.js')}}" defer></script>
 </body>
 </html>

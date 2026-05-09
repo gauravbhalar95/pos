@@ -1,0 +1,16 @@
+{% extends "devbase.html" %}
+{% block title %}admin_edit{% endblock %}
+{% block content %}
+<div class="e_form">
+    <form action="/sub/edit/{{plan[0]}}" method="post">
+        <label for="plan">PLAN ID: {{ plan[0] }}</label>
+        <label for="plan">PLAN_NAME</label>
+        <input type="text" name="plann" class="admin_edit" id="price" value="{{ plan[1] }}">
+        <label for="price">DAYS</label>
+        <input type="text" name="days" id="price" class="admin_edit" value="{{ plan[2] }}">
+        <label for="price">PRICE</label>
+        <input type="text" name="price" id="price" class="admin_edit" value="{{ plan[3] }}">
+        <button class="e_smt" type="submit">SAVE</button>
+    </form>
+</div>
+{% endblock %}

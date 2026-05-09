@@ -1,21 +1,56 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
-{% block navbar %}{% endblock %}
 {% block content %}
-<header>firmname:{{header}}</header>
-<div class="images">
-    <a href="/billing">
-        <img src="/static/billing.jpeg">
-    </a>
-    <a href="/product">
-        <img src="/static/product.jpeg">
-    </a>
-    <a href="/inventory">
-        <img src="/static/inventory.jpeg">
-    </a>
+<div class="d_main">
+
+    <div class="d_box">
+        <a class="linkbar" href="/billing">
+            <div class="d_bill">🧾</div>
+            <h5 class="dhead">BILLING</h5>
+            <h5 class="d_text">Create bills, manage cart and generate invoices</h5>
+        </a>
+    </div>
+
+    <div class="d_box">
+        <a class="linkbar" href="/product">
+            <div class="d_pro">📦</div>
+            <h5 class="dhead">PRODUCTS</h5>
+            <h5 class="d_text">View, edit and delete your product catalogue</h5>
+        </a>
+    </div>
+
+    <div class="d_box">
+        <a class="linkbar" href="/inventory">
+            <div class="d_inv">➕</div>
+            <h5 class="dhead">INVENTORY</h5>
+            <h5 class="d_text">Add new products or bulk import via Excel</h5>
+        </a>
+    </div>
+
+    <div class="d_box">
+        <a class="linkbar" href="/add_firm">
+            <div class="d_firm">⚙️</div>
+            <h5 class="dhead">ADD FIRM</h5>
+            <h5 class="d_text">Configure your firm name, GST number and address</h5>
+        </a>
+    </div>
+
+    <div class="d_box">
+        <a class="linkbar" href="/receipt">
+            <div class="d_repo">📊</div>
+            <h5 class="repo">REPORT</h5>
+            <h5 class="d_text repo_text">Report all bills</h5>
+        </a>
+    </div>
+
 </div>
 <div id="date">
     <p>{{date}}</p>
 </div>
+<div class="clock" id="clock">
+  <div class="hand hour" id="hour"></div>
+  <div class="hand minute" id="minute"></div>
+  <div class="hand second" id="second"></div>
+  <div class="center"></div>
+</div>
 {% endblock %}
-{% block footer %}{% endblock footer %}
+{% block extra_scripts %}{% endblock %}

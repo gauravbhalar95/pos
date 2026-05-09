@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="details">
+    <form id="fxr_form" action="config" method="post">
+        <label for="">Father_name</label><br>
+        <input class="fxr_in" type="text" name="father" placeholder="Father_name"><br>
+        <label for="">Teacher_name</label><br>
+        <input class="fxr_in" type="text" name="teacher" placeholder="fav teacher"><br>
+        <label for="">Pet_name</label><br>
+        <input class="fxr_in" type="text" name="pet" placeholder="Pet_name"><br>
+        <button class="fxr_smt" type="submit"></button>
+    </form>
+</div>
+{% endblock %}
+{% block extra_scripts %}{% endblock %}

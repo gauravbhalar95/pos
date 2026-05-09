@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dev</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/styles/devstyles.css')}}">
+</head>
+<body>
+<nav class="dev-nav">
+    <a href="/dev_login">Dev_login</a>
+    <a href="/dev_register">Dev register</a>
+    <a href="/dev_home">Dev home</a>
+    <a href="/devloper_edit">Dev edit</a>
+    <a href="/subrate">Rate</a>
+    <a href="/insert">Rate Insert</a>
+</nav>
+<header>
+{% block header %}{% endblock %}
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<script src="{{ url_for('static', filename='/js/dev.js')}}" defer></script>
+{% block extra_scripts %}{% endblock %}    
+</body>
+</html>

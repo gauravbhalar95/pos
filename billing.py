@@ -19,51 +19,30 @@ def billing():
     return render_template("billing.html", products=products)
 
 # 📱 Barcode Scan API
-@billing_db.route("/get-product/<id>")
-def get_product(id):
+@billing_db.route("/get-product/<barcode>")
+def get_product(barcode):
     cursor.execute(
-        "SELECT * FROM inventory WHERE id=%s",
-        (id,)
+        "SELECT * FROM inventory WHERE barcode=%s",
+        (barcode,)
     )
     product = cursor.fetchone()
 
     if product:
-        return {"name": product[1], "price": product[2], "image": product[3], "barcode": product[4],}
+        return {"name": product[1], "price": product[2], "barcode": product[4],}
     else:
         return {"error": "Not found"}
     
-@billing_db.route("/get-gst")
-def gst():  
+@billing_db.route("/get-gst/<name>")
+def gst(name):  
     conn = contect()
     cursor = conn.cursor()
-    query = "SELECT gst FROM inventory LIMIT 1"
-    cursor.execute(query)
-    gst = cursor.fetchone()
-    cursor.close()
+    query = "SELECT name,GST,price,barcode FROM inventory where name=%s"
+    cursor.execute(query,(name,))
+    data = cursor.fetchone()
     conn.close()
-    return jsonify(gst)
-
-
-@billing_db.route("/cart", methods=["POST"])  # ✅ allow POST
-def cart():
-    data = request.get_json()
-
-    if not data:
-        return jsonify({"error": "No JSON received"}), 400
-
-    item_name = data.get("name")
-
-    query = "SELECT * FROM inventory WHERE itemname=%s"
-    cursor.execute(query, (item_name,))  # ✅ tuple fix
-
-    item = cursor.fetchone()  # ✅ get single row
-
-    if item:
-        gst_tax = item["gst"]  # works if using DictCursor
-    else:
-        gst_tax = 0
-
-    return jsonify({"gst": gst_tax})
+    cursor.close()
+    
+    return jsonify("data",data)
 
 
 @billing_db.route("/image/<int:id>")
@@ -84,10 +63,11 @@ def save_bill():
     total = data["total"]
     gst = data["gst"]
     grand = data["grand"]
+    firm_id = session.get("firm_id")
 
     cursor.execute(
-        "INSERT INTO sales (total_amount, gst, grand_total) VALUES (%s,%s,%s)",
-        (total, gst, grand)
+        "INSERT INTO sales (total_amount, gst, grand_total, firm_id) VALUES (%s,%s,%s,%s)",
+        (total, gst, grand, firm_id)
     )
     conn.commit()
 
@@ -169,3 +149,4 @@ def genpdf(sale_id):
     c.save()
 
     return send_file(filepath, as_attachment=True)
+

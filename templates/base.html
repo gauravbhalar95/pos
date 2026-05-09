@@ -7,27 +7,31 @@
         {% block title %}{% endblock %}
     </title>
     {% block head %}{% endblock %}
-    <link rel="stylesheet" href="/static/styles/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile.css') }}">
+    <link rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Font+Name">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
 <body>
-{% block body %}
-<header>
-    {% block header %}{% endblock %}
-</header>
-<nav class="container">     
-        <a href="/home">Home</a>
-        <a href="/inventory">Inventory</a>
-        <a href="/ledger">Ledger</a>
-        <a href="/settings">Settings</a>
-    {% block navbar %}{% endblock %}
+<nav class="n_bar">
+    <a href="/billing" class="navbar">BILLING</a>
+    <a href="/home" class="navbar">HOME</a>
+    <a href="/inventory" class="navbar">INVENTORY</a>
+    <a href="/product" class="navbar">PRODUCTS</a>
+    <a href="/receipt" class="navbar">REPORT</a>
+    <a href="/subscriptions" class="navbar">SUBSCRIPTION</a>
+    <a href="/add_firm" class="navbar">ADD FIRM</a>
+    <a href="/firm" class="navbar">FIRM</a>
 </nav>
 <main>
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
 </main>
-<footer>
-    {% block footer %}{% endblock footer %}
-</footer>
-{% endblock body %}
-<script src="/static/js/scripts.js"></script>
+
+
+<script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
+{% block extra_scripts %}
+{% endblock %}
 </body>
 </html>

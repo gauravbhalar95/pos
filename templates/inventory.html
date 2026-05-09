@@ -1,22 +1,45 @@
 {% extends "base.html" %}
-{% block title %}inventory{% endblock %}
-{% block header %}{% endblock %}
 {% block content %}
-<form action="/inventory" method="post" enctype="multipart/form-data">
-    <p>{{ product }}</p><br>
-    Image:
-    <input type="file" name="file"><br>
-    Barcode:
-    <input type="number" name="barcode">
-    Product Name:
-    <input type="text" name="productname"><br>
-    Price:
-    <input type="text" name="price" ><br>
-    Gst:
-    <input type="radio" name="gst" value="gst5">5%
-    <input type="radio" name="gst" value="gst18">18%
-    <input type="radio" name="gst" value="gst28">28%
-    <button type="submit">save</button>
-</form>
-<button type="button" id="import">Import</button>
+<div class="inventory_box">
+    <form class="inventory" action="/inventory" method="post" enctype="multipart/form-data">
+        <h3 class="text">Product Name:</h3>
+        <input class="inventory_boxes" type="text" name="productname"><br>
+        <h3 class="text">Barcode:</h3>
+        <input class="inventory_boxes" type="number" name="barcode"><br>
+        <h3 class="text">Price:</h3>
+        <input class="inventory_boxes" type="text" name="price" ><br>
+        <h3 class="text">Gst:</h3>
+        <div class="gst-container">
+        <input type="radio" id="gst5" name="gst" value="5">
+        <label for="gst5">GST 5%</label>
+
+        <input type="radio" id="gst18" name="gst" value="18">
+        <label for="gst18">GST 18%</label>
+
+        <input type="radio" id="gst28" name="gst" value="28">
+        <label for="gst28">GST 28%</label>
+        </div>
+        <h3 class="text">Image:</h3>
+        
+        <div class="inventory_image_div">
+            <label for="fileInput" class="inventory_label">
+            📷 CLICK TO UPLOAD IMAGE
+            </label>
+            <input type="file" id="fileInput" name="file" hidden>
+        </div>
+        <br>
+        <button class="inventory_smt" type="submit">SAVE</button>
+    </form>
+</div>
+<div class="import_div">
+    <label class="im_label" for="import"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#78A75A"><path d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/></svg>IMPORT FROM EXCEL</label>
+   <label for="import" class="im_file">
+  📂 IMPORT EXCEL
+    </label>
+    <input type="file" id="import" name="import" class="im_file" hidden>
+    <button class="temp" type="submit" onclick="template()">⬇️TEMPLATE</button>
+</div>
 {% endblock %}
+
+    
+

@@ -1,14 +1,18 @@
-<!<!DOCTYPE HTML>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width-device-width, initial-scale=1.0">
-        <title>Firm Select</title>
-    </head>
-    <body>
-        <select name="firm_id">
+{% extends "base.html" %}
+{% block content %}
+<div class="select_box">
+    <form class="select_firm" action="/firm" method="post">
+        <select class="list" name="firm_id">
             {% for f in firm %}
-            <option value="{{f.id}}">{{f.firm_name}}</option>
+            <p>{{ f }}</p>
+            <option value="{{f[0]}}">{{f[1]}}</option>
+            {% endfor %}
         </select>
-    </body>
-</html>
+        <p style="font-size: large;">{{data2}}</p>
+        <br>
+        <button class="ssmt" type="submit">SELECT KINGDOM</button><br>
+        <a href="/add_firm">➕Add Firm</a>
+    </form>
+</div>
+{% endblock %}
+{% block extra_scripts %}{% endblock %}

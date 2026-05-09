@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Choose Your Plan</h1>
+    {% for rate in new %}
+    <div class="plan_box">
+        <div class="plan_inner">
+            <h4 class="name">{{rate[1]}}</h4>
+            <h4 class="days">Days {{rate[2]}}</h4>
+            <button class="s_btn" type="submit">{{rate[3]}}</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block extra_scripts %}{% endblock %}

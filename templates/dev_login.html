@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="/static/styles/devstyles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+<div class="line"></div>
+<button id="but" type="button" onclick="light_off()"></button>
+<div id="top" class="top-arc"></div>
+<div class="shade"></div>
+<div class="stand"></div>
+<span class="material-symbols-outlined bright">
+brightness_5
+</span>
+<span class="material-symbols-outlined moon">
+dark_mode
+</span>
+<div class="loader"></div>
+<form class="dev_form" action="/devloper" method="post" accept-charset="utf-8">
+        <label class="l_text" for="Username">Username</label><br>
+        <input type="text" name="username" class="l_in" placeholder="username"><br>
+        <label class="l_text" for="mobile number">mobile number</label><br>
+        <input type="tel" name="number" class="l_in" placeholder="mobile number"><br>
+        <label class="l_text" for="password">password</label><br>
+        <input type="password" name="password"  id="pass"class="l_in" placeholder="password"><br>
+        <button class="l_btn" type="submit">Login</button>
+</form>
+<script src="/static/js/dev.js" defer></script> 
+</body>
+</html>

@@ -4,30 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/styles/styles.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/styles/mobile.css')}}">
 </head>
 <body>
-    <form action="/register" method="post">
-        <h2>register page</h2>
-        <input type="text" name="username" id="user"><br>
-        <input type="password" name="password" id="pass"><br>
-        <input type="password" name="pin" id="pin" minlength="4" maxlength="4">
-        <button type="button" onclick="show()">show</button>
+    <form class="register" action="/register" method="post">
+        <div class="taj">👑</div>
+        <h2 class="king">REGISTER YOUR KINGDOM</h2>
+        <h3>USERNAME</h3><h3 hidden>{{error}}</h3>
+        <input class="register_box" type="text" name="username" id="user" placeholder="Register Your Username"><br>
+        <h3>PASSWORD</h3>
+        <input class="register_box" type="password" name="password" id="pass" placeholder="Register Your Password"><br>
+        <h3>PIN</h3>
+        <input class="register_box" type="password" name="pin" id="pin" minlength="4" maxlength="4" placeholder="Register 4 Digit PIN">
+        <button class="register_btn" type="button" onclick="show()">👁️ SHOW/HIDE </button>
         <br>
-        <button type="submit">submit</button>
+        <button class="rsmt" type="button" onclick="new_form()">REGISTER YOUR KINGDOM</button>
     </form>
-    <script>
-        function show(){
-            let showpassword = document.getElementById("pass")
-            let number = document.getElementById("pin")
-            if (showpassword.type == "password" || number.type == "password"){
-                showpassword.type = "text";
-                number.type = "pin"
-            }
-            else{
-                showpassword.type = "password";
-                number.type = "password"
-            } 
-        }
-    </script>
+    <div class="r_text">
+        you have alredy an account
+        <a href="">log in</a>
+    </div>
+    <script src="/static/js/scripts.js"></script>
 </body>
 </html>
