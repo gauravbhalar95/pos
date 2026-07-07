@@ -1,4 +1,5 @@
 import mysql.connector as myconn
+from config import *
 
 
 def contect():
