@@ -2,7 +2,7 @@ import mysql.connector as myconn
 
 
 def contect():
-    conn = myconn.connect(host="localhost",user="root",password="GAURAV",database="website")
+    conn = myconn.connect(host="host2",user="root2",password="GAURAV",database="website")
     return conn
 
 
