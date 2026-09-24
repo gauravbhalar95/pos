@@ -1,90 +1,63 @@
-from database import setup_database, contect
-from flask import Flask
+from database import contect
+from flask import Blueprint, request, session, redirect, render_template, url_for, send_file
+from auth import login_required
 from libery import *
-
+import os
 
 receipt_db = Blueprint("receipt", __name__)
 
-receiptall = []
-
 @receipt_db.route("/receipt", methods=["POST", "GET"])
+@login_required
 def report():
     firm_id = session.get("firm_id")
-    conn = contect()
-    cursor = conn.cursor()
-    query = "SELECT * FROM sales WHERE firm_id=%s AND is_deleted = False"
-    cursor.execute(query,(firm_id,))
+    conn = contect(); cursor = conn.cursor()
+    cursor.execute("SELECT * FROM sales WHERE firm_id=%s AND is_deleted=FALSE ORDER BY id DESC", (firm_id,))
     receiptall = cursor.fetchall()
-    for sales in receiptall:
-        sale_id = sales[0]
 
-    query2 = "SELECT * FROM sales_items WHERE sale_id=%s"
-    cursor.execute(query2,(sale_id,))
-    items = cursor.fetchall()
-    cursor.close()
-    conn.close()
+    items_by_sale = {}
+    for sale in receiptall:
+        cursor.execute("SELECT * FROM sales_items WHERE sale_id=%s AND firm_id=%s", (sale[0], firm_id))
+        items_by_sale[sale[0]] = cursor.fetchall()
 
-    if request.method == "POST":
-        dt = request.form.get("val")
+    if request.method == "POST" and request.form.get("val") == "True":
+        df = pd.DataFrame(receiptall)
+        folder = os.path.join(os.getcwd(), "static", "tempory")
+        os.makedirs(folder, exist_ok=True)
+        path = os.path.join(folder, "report.xlsx")
+        df.to_excel(path, index=False)
+        cursor.close(); conn.close()
+        return send_file(path, as_attachment=True)
 
-        if dt == "True":
-            df = pd.DataFrame(receiptall, columns=["id", "date", "amount", "im", "io", "fi"])
+    cursor.close(); conn.close()
+    return render_template("report.html", recipet=receiptall, items_by_sale=items_by_sale)
 
-            folder_path = os.path.join(os.getcwd(), "static", "tempory")
-            os.makedirs(folder_path, exist_ok=True)
-
-            file_path = os.path.join(folder_path, "report.xlsx")
-            df.to_excel(file_path, index=False)
-
-            return send_file(file_path, as_attachment=True)
-
-    return render_template("report.html", recipet=receiptall, item = items)
-
-@receipt_db.route("/print#/<int:id>")
+@receipt_db.route("/print/<int:id>")
+@login_required
 def print_recipt(id):
-    conn = contect()
-    cursor = conn.cursor()
-
-    # Fetch correct sale
-    query = "SELECT * FROM sales WHERE id=%s"
-    cursor.execute(query, (id,))
+    firm_id = session.get("firm_id")
+    conn = contect(); cursor = conn.cursor()
+    cursor.execute("SELECT * FROM sales WHERE id=%s AND firm_id=%s AND is_deleted=FALSE", (id, firm_id))
     sale_bill = cursor.fetchone()
-
-    # Fetch items
-    query2 = "SELECT * FROM sales_items WHERE sale_id=%s"
-    cursor.execute(query2, (id,))
+    if not sale_bill:
+        cursor.close(); conn.close(); return "Not found", 404
+    cursor.execute("SELECT * FROM sales_items WHERE sale_id=%s AND firm_id=%s", (id, firm_id))
     sales_item = cursor.fetchall()
+    cursor.close(); conn.close()
 
-    cursor.close()
-    conn.close()
     p = Usb(0x04b8, 0x0202, 0, profile="TM-T88III")
     p.text("==== RECEIPT ====\n")
     p.text(f"Bill ID: {sale_bill[0]}\n")
     p.text(f"Date-Time: {sale_bill[1]}\n")
-    p.text("----------------------\n")
     for item in sales_item:
-        p.text(f"{item[1]}  x{item[2]}  Rs.{item[3]}\n")
-
-    p.text("----------------------\n")
-    p.text(f"Total: {sale_bill[2]}\n")
-    p.text(f"GST: {sale_bill[3]}\n")
-    p.text(f"Grand Total: {sale_bill[4]}\n")
-
-    p.image("logo.gif")
-    p.barcode('4006381333931', 'EAN13', 64, 2, '', '')
-    p.text("\nThank you! Visit again 🙏\n")
+        p.text(f"{item[2]}  x{item[3]}  Rs.{item[4]}\n")
+    p.text(f"Total: {sale_bill[2]}\nGST: {sale_bill[3]}\nGrand Total: {sale_bill[4]}\n")
     p.cut()
-
     return "Printed Successfully"
 
-@receipt_db.route("/delete/<int:id>", methods=["POST","GET"])
+@receipt_db.route("/delete/<int:id>", methods=["POST"])
+@login_required
 def delete(id):
-    if request.method == "POST":
-        conn = contect()
-        cursor = conn.cursor()
-        qurey = "update sales set is_deleted = TRUE where id=%s"
-        cursor.execute(qurey,(id,))
-        conn.commit()
-        cursor.close()
-        conn.close()
-        return redirect(url_for("report"))
+    conn = contect(); cursor = conn.cursor()
+    cursor.execute("UPDATE sales SET is_deleted=TRUE WHERE id=%s AND firm_id=%s", (id, session.get("firm_id")))
+    conn.commit(); cursor.close(); conn.close()
+    return redirect(url_for("receipt.report"))
