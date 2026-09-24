@@ -1,8 +1,0 @@
-flask
-mysql.connector
-base64
-qrcode
-pandas
-numpy
-reportlab
-openpyxl
