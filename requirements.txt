@@ -1,0 +1,13 @@
+Flask
+Flask-Cors
+mysql-connector-python
+python-dotenv
+qrcode
+pandas
+numpy
+reportlab
+openpyxl
+gunicorn
+python-escpos
+pyusb
+matplotlib

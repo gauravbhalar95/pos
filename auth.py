@@ -1,200 +1,219 @@
-from flask import *
-from database import setup_database, contect
-from libery import *
-from datetime import datetime, timedelta
-
+from flask import Blueprint, request, session, redirect, render_template, flash
+from database import contect
+from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
+from datetime import datetime
 
 
 auth_db = Blueprint("auth", __name__)
 
-    
+
+def login_required(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        if "user" not in session:
+            return redirect("/login")
+        return view(*args, **kwargs)
+    return wrapped
+
+
 @auth_db.route("/login", methods=["POST", "GET"])
 def login():
-
     if request.method == "POST":
-
-        username = request.form.get("username")
-        password = request.form.get("password")
-        pin = request.form.get("pin")
-
+        username = (request.form.get("username") or "").strip()
+        password = request.form.get("password") or ""
+        pin = request.form.get("pin") or ""
         check_box = request.form.get("true")
 
-        # Remember me
-        session.permanent = True if check_box else False
+        if not username or not password and not pin:
+            return redirect("/login")
+
+        session.permanent = bool(check_box)
 
         conn = contect()
         cursor = conn.cursor()
-
-        # Get user by username
-        query = "SELECT * FROM login WHERE username=%s"
-        cursor.execute(query, (username,))
-
+        cursor.execute(
+            "SELECT id, username, password, pin FROM login WHERE username=%s",
+            (username,),
+        )
         user = cursor.fetchone()
-
+        cursor.close()
         conn.close()
 
-        if user:
+        valid_password = bool(user and check_password_hash(user[2], password))
+        valid_pin = bool(user and user[3] and check_password_hash(user[3], pin))
 
-            db_id = user[0]
-            db_username = user[1]
-            db_password = user[2]
-            db_pin = user[3]
-            if check_password_hash(db_password, password) or db_pin == pin:
-                session["user"] = db_id
-                return redirect("/add_firm")
-            else:
-                return redirect("/login")
+        if valid_password or valid_pin:
+            session.clear()
+            session["user"] = user[0]
+            return redirect("/add_firm")
+
+        flash("Invalid username or password/PIN.")
+        return redirect("/login")
 
     return render_template("login.html")
 
-@auth_db.route("/securty", methods=["POST","GET"])
+
+@auth_db.route("/securty", methods=["POST", "GET"])
+@login_required
 def securtyq():
-    user_id = session.get("user")
+    user_id = session["user"]
     if request.method == "POST":
         father = request.form.get("father")
         teacher = request.form.get("teacher")
         pet = request.form.get("pet")
         conn = contect()
         cursor = conn.cursor()
-        qurey = "UPDATE login SET father=%s,teacher=%s,pet=%s WHERE id=%s"
-        cursor.execute(qurey,(father,teacher,pet,user_id))
+        cursor.execute(
+            "UPDATE login SET father=%s, teacher=%s, mother=%s WHERE id=%s",
+            (father, teacher, pet, user_id),
+        )
         conn.commit()
         cursor.close()
         conn.close()
     return render_template("securty.html")
 
-@auth_db.route("/forgetpassword", methods=["POST","GET"])
+
+@auth_db.route("/forgetpassword", methods=["POST", "GET"])
 def forget():
     if request.method == "POST":
-        username = request.form.get("username")
-        current_password = request.form.get("current")
-        new_password = request.form.get("new")
-        re_password = request.form.get("re-enter")
-        father = request.form.get("father")
-        mother = request.form.get("mother")
-        teacher = request.form.get("teacher")
-        if (new_password == re_password) and (current_password != "") :
-            conn = contect()
-            cursor = conn.cursor()
-            qurey = "update login set password = %s where username = %s"
-            cursor.execute(qurey,(new_password,username,))
-            conn.commit()
+        username = (request.form.get("username") or "").strip()
+        current_password = request.form.get("current") or ""
+        new_password = request.form.get("new") or ""
+        re_password = request.form.get("re-enter") or ""
+
+        if not username or not new_password or new_password != re_password:
+            flash("Passwords do not match or required fields are missing.")
+            return redirect("/forgetpassword")
+
+        conn = contect()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, password FROM login WHERE username=%s",
+            (username,),
+        )
+        user = cursor.fetchone()
+
+        if not user or not check_password_hash(user[1], current_password):
             cursor.close()
             conn.close()
-        elif (new_password == re_password) and (current_password == "") :
-            conn = contect()
-            cursor = conn.cursor()
-            qurey = "select * from login where username = %s" 
-            cursor.execute(qurey,(username,))
-            details = cursor.fetchone()
-            cursor.close()
-            conn.close()
-            if details:
-                username1 = details[1]
-                father1 = details[4]
-                mother1 = details[5]
-                teacher1 = details[6]
-                if (username1==username) and (father1==father) and (mother1==mother) and (teacher1==teacher):
-                    conn = contect()
-                    cursor = conn.cursor()
-                    qurey = "update login set password = %s where username = %s"
-                    cursor.execute(qurey,(new_password,username,))
-                    conn.commit()
-                    cursor.close()
-                    conn.close()
+            flash("Current password is incorrect.")
+            return redirect("/forgetpassword")
 
+        new_hash = generate_password_hash(new_password)
+        cursor.execute(
+            "UPDATE login SET password=%s WHERE id=%s",
+            (new_hash, user[0]),
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+        flash("Password changed successfully.")
+        return redirect("/login")
 
-    return render_template("/forgetpassword.html")
+    return render_template("forgetpassword.html")
 
 
 @auth_db.route("/register", methods=["POST", "GET"])
 def register():
-
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        pin = request.form.get("pin")
+        username = (request.form.get("username") or "").strip()
+        password = request.form.get("password") or ""
+        pin = request.form.get("pin") or ""
 
-        hashed_password = generate_password_hash(password)
+        if not username or not password:
+            flash("Username and password are required.")
+            return redirect("/register")
+
+        if pin and (not pin.isdigit() or len(pin) != 4):
+            flash("PIN must be exactly 4 digits.")
+            return redirect("/register")
 
         conn = contect()
         cursor = conn.cursor()
-
-        # Check existing username
-        cursor.execute(
-            "SELECT * FROM login WHERE username=%s",
-            (username,)
-        )
-
-        user = cursor.fetchone()
-
-        if user:
-            flash("Please select unique username")
+        cursor.execute("SELECT id FROM login WHERE username=%s", (username,))
+        if cursor.fetchone():
+            cursor.close()
             conn.close()
+            flash("Please select a unique username.")
             return redirect("/register")
 
-        # Insert new user
-        query = """
-            INSERT INTO login(username, password, pin)
-            VALUES (%s, %s, %s)
-        """
-
-        cursor.execute(query, (username, hashed_password, pin))
-
+        cursor.execute(
+            "INSERT INTO login(username, password, pin) VALUES (%s, %s, %s)",
+            (
+                username,
+                generate_password_hash(password),
+                generate_password_hash(pin) if pin else None,
+            ),
+        )
         conn.commit()
+        cursor.close()
         conn.close()
-
         return redirect("/login")
 
     return render_template("register.html")
 
+
 @auth_db.route("/logout")
 def logout():
-    session.pop("user_id",None)
+    session.clear()
     return redirect("/login")
 
-@auth_db.route("/home", methods = ["POST","GET"])
-def dashboard():
-    #if "user" not in session:
-    #   return redirect("/login")
-    #if "user" in session:
-        now = datetime.now()
-        return render_template("home.html", date = now, pos = "👑King Pos")
 
-@auth_db.route("/firm", methods=["POST","GET"])
+@auth_db.route("/home", methods=["POST", "GET"])
+@login_required
+def dashboard():
+    now = datetime.now()
+    return render_template("home.html", date=now, pos="👑King Pos")
+
+
+@auth_db.route("/firm", methods=["POST", "GET"])
+@login_required
 def firmselect():
-    #if "user" not in session:
-    #   return redirect("/login")
-    user_id = session.get("user")
+    user_id = session["user"]
     conn = contect()
     cursor = conn.cursor()
-    query = "SELECT * FROM firm WHERE user_id = %s"
-    cursor.execute(query,(user_id,))
+    cursor.execute("SELECT * FROM firm WHERE user_id=%s", (user_id,))
     data = cursor.fetchall()
-    cursor.close()
-    conn.close() 
+
     if request.method == "POST":
         firm_id = request.form.get("firm_id")
-        session["firm_id"]=firm_id   
+        cursor.execute(
+            "SELECT id FROM firm WHERE id=%s AND user_id=%s",
+            (firm_id, user_id),
+        )
+        if not cursor.fetchone():
+            cursor.close()
+            conn.close()
+            return redirect("/firm")
+        session["firm_id"] = firm_id
+        cursor.close()
+        conn.close()
         return redirect("/home")
-    return render_template("firm.html", firm = data)
-    
-    
-@auth_db.route("/add_firm", methods = ["POST","GET"])
+
+    cursor.close()
+    conn.close()
+    return render_template("firm.html", firm=data)
+
+
+@auth_db.route("/add_firm", methods=["POST", "GET"])
+@login_required
 def addfirm():
-    #if "user" not in session:
-    #   return redirect("/login")
     if request.method == "POST":
         firm = request.form.get("firm")
         gstno = request.form.get("gstno")
         firmaddress = request.form.get("firmaddress")
-        user_id = session.get("user")
+        user_id = session["user"]
+
         conn = contect()
         cursor = conn.cursor()
-        query = "insert into firm(firm,gstno,firmaddress,user_id) values (%s,%s,%s,%s)"
-        cursor.execute(query,(firm,gstno,firmaddress,user_id))
+        cursor.execute(
+            "INSERT INTO firm(firm,gstno,firmaddress,user_id) VALUES (%s,%s,%s,%s)",
+            (firm, gstno, firmaddress, user_id),
+        )
         conn.commit()
         cursor.close()
-        return redirect("firm")
-        
+        conn.close()
+        return redirect("/firm")
+
     return render_template("add_firm.html")
